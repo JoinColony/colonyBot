@@ -2,7 +2,7 @@ import { Application } from 'probot'
 import { Dispatch } from 'redux'
 import { Router } from 'express'
 
-import ACTIONS, { EVENT_RECIEVED, ISSUE_OPENED } from '../actions'
+import ACTIONS, { EVENT_RECIEVED, ISSUE_OPENED, GITHUB_PRE_INSTALL, GITHUB_INSTALL } from '../actions'
 
 /*
  * Listeners should be used at the boundary of data coming in from the dApp or
@@ -22,8 +22,14 @@ const setupGithubListeners = (app: Application, dispatch: Dispatch) => {
 
 const setupDappListeners = (app: Application, dispatch: Dispatch) => {
   const router: Router = app.route('/colony')
-  router.post('/event', req => {
-    dispatch<EVENT_RECIEVED>({ type: ACTIONS.EVENT_RECIEVED, body: req.body })
+  router.get('/install', (req, res) => {
+    dispatch<GITHUB_PRE_INSTALL>({ type: ACTIONS.GITHUB_PRE_INSTALL, req, res })
+  })
+  router.get('/authed', (req, res) => {
+    dispatch<GITHUB_INSTALL>({ type: ACTIONS.GITHUB_INSTALL, req, res })
+  })
+  router.get('/event', (req, res) => {
+    dispatch<EVENT_RECIEVED>({ type: ACTIONS.EVENT_RECIEVED, req, res })
   })
 }
 

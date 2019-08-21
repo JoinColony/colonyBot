@@ -7,7 +7,9 @@ import rootSaga from './sagas'
 import setupListeners from './listeners'
 
 export = (app: Application) => {
-  const sagaMiddleware = createSagaMiddleware()
+  const sagaMiddleware = createSagaMiddleware({
+    context: { app }
+  })
 
   /*
    * Redux is used for sagas and also any data persistence, later we could use
